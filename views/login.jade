@@ -1,0 +1,41 @@
+extends layout
+block scriptInHeader
+    script(src="/js/jquery.min.js")
+    script(src="/js/md5.js")
+
+block content
+    .form
+        input(type="text", name="username", placeholder="username", value="gavinning")
+        input(type="password", name="password", placeholder="password", value="sqllincoapp")
+        button.btn-submit 登录
+
+    script.
+        function getData() {
+            var data = {};
+            data.username = $('input[name="username"]').val();
+            data.password = $('input[name="password"]').val();
+            return data;
+        }
+        function getEncryption(user){
+            user.password = md5( md5(user.password) + user.username );
+            return user;
+        }
+        function login(){
+            $.ajax({
+                url: '/login',
+                type: 'POST',
+                data: getEncryption(getData()),
+                success: function(){
+                    location.reload()
+                },
+                error: function(xhr){
+                    alert(xhr.status + ': ' + xhr.responseText)
+                }
+            })
+        }
+        $('.btn-submit').click(login);
+        $('input[name="password"]').keypress(function(e){
+            if(e.keyCode === 13){
+                login()
+            }
+        });

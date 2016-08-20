@@ -1,0 +1,34 @@
+extends layout
+block scriptInHeader
+    script(src="/js/jquery.min.js")
+    script(src="/js/md5.js")
+
+block content
+    div
+        button.btn-logout logout
+    div
+        button Publish
+    div
+        label(for="isUpdateDependencies") is update dependencies
+        input(type="checkbox", id="isUpdateDependencies")
+    .history
+        ul
+            li
+                h3 History
+                .message History Message
+                button rollback
+
+    script.
+        function logout(){
+            $.ajax({
+                url: '/logout',
+                type: 'POST',
+                success: function(){
+                    location.reload()
+                },
+                error: function(xhr){
+                    alert(xhr.status + ': ' + xhr.responseText)
+                }
+            })
+        }
+        $('.btn-logout').click(logout)
