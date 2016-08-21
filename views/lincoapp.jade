@@ -4,22 +4,26 @@ block scriptInHeader
     script(src="/js/md5.js")
 
 block content
-    div
+    .groups
         button.btn-logout logout
-    div
+    .groups
         button.btn-publish Publish
-    div
+    .groups
         label(for="isUpdateDependencies") is update dependencies
         input(type="checkbox", id="isUpdateDependencies")
     .history
+        .title Publish History
         ul
             if(tags.length)
+                -console.log(tags)
                 each tag in tags
-                    
                     li
-                        h3= tag.name
+                        .name= tag.name
                         .message= tag.message
-                        button rollback
+                        if(tag.running)
+                            button.btn-running Running
+                        else
+                            button.btn-rollback rollback
             else
                 li No History
     script.
@@ -38,9 +42,33 @@ block content
         $('.btn-logout').click(logout)
         
         $('.btn-publish').click(function(){
+            var ppt = prompt('请填写发布日志，发布日志不能为空！')
+            if(!ppt){
+                return alert('发布日志为空，发布失败')
+            }
             $.ajax({
                 url: '/api/publish',
-                type: 'GET',
+                type: 'POST',
+                data: {
+                    dep: $('#isUpdateDependencies').prop('checked')
+                },
+                success: function(msg){
+                    console.log(msg)
+                },
+                error: function(xhr){
+                    console.log(xhr)
+                }
+            })
+        })
+        
+        $('.btn-rollback').click(function(){
+            $.ajax({
+                url: '/api/rollback',
+                type: 'POST',
+                data: {
+                    tagName: $(this).parents('li').find('.name').text(),
+                    dep: $('#isUpdateDependencies').prop('checked')
+                },
                 success: function(msg){
                     console.log(msg)
                 },

@@ -53,15 +53,16 @@ router.post('/logout', function(req, res){
 // HOME
 router.get('/lincoapp', function(req, res, next) {
     dep.getTags().then(tags => {
-        res.render('lincoapp', { tags: tags })
+        res.render('lincoapp', { tags: tags.reverse() })
     })
     .catch(err => {
         res.status(500).send(err.message)
     })
 });
 
-router.get('/api/publish', function(req, res, next){
-    dep.deploy.publish().then(tag => {
+router.post('/api/publish', function(req, res, next){
+    let isDep = req.body.dep === 'true' ? true : false;
+    dep.deploy.publish(isDep).then(tag => {
         res.json({
             code: 0,
             data: {
@@ -72,6 +73,21 @@ router.get('/api/publish', function(req, res, next){
             }
         })
     })
-})
+});
+
+router.post('/api/rollback', function(req, res, next){
+    let isDep = req.body.dep === 'true' ? true : false;
+    dep.deploy.rollback(req.body.tagName, isDep).then(tag => {
+        res.json({
+            code: 0,
+            data: {
+                tag: {
+                    name: tag.name(),
+                    message: tag.message()
+                }
+            }
+        })
+    })
+});
 
 router.get

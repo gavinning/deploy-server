@@ -5,9 +5,12 @@ block scriptInHeader
 
 block content
     .form(guid= guid)
-        input(type="text", name="username", placeholder="username", value="gavinning")
-        input(type="password", name="password", placeholder="password", value="sqllincoapp")
-        button.btn-submit 登录
+        .groups
+            input.input(type="text", name="username", placeholder="username", value="gavinning")
+        .groups
+            input.input(type="password", name="password", placeholder="password", value="sqllincoapp")
+        .groups
+            button.btn-submit 登录
 
     script.
         function getData() {
@@ -19,10 +22,8 @@ block content
         }
         function getEncryption(user){
             user.password = md5(user.password);
-            user.password = md5( user.password + user.username );
-            console.log(user.password)
-            user.password = md5( user.password + user.guid );
-            console.log(user.password)
+            user.password = md5(user.password + user.username);
+            user.password = md5(user.password + user.guid);
             return user;
         }
         function login(){
@@ -34,7 +35,7 @@ block content
                     location.reload()
                 },
                 error: function(xhr){
-                    alert(xhr.status + ': ' + xhr.responseText)
+                    location.reload()
                 }
             })
         }
