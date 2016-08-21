@@ -2,7 +2,7 @@ var Deploy = require('aimee-deploy')
 var deploy = new Deploy({
     git: {
         // 远程Git仓库地址
-        url: 'https://github.com/Baiyangzuo/rong.git',
+        url: '/Users/gavinning/Documents/lab/rong',
         // 本地目标地址
         target: '/Users/gavinning/Desktop/rong'
     },

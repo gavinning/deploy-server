@@ -7,17 +7,21 @@ block content
     div
         button.btn-logout logout
     div
-        button Publish
+        button.btn-publish Publish
     div
         label(for="isUpdateDependencies") is update dependencies
         input(type="checkbox", id="isUpdateDependencies")
     .history
         ul
-            li
-                h3 History
-                .message History Message
-                button rollback
-
+            if(tags.length)
+                each tag in tags
+                    
+                    li
+                        h3= tag.name
+                        .message= tag.message
+                        button rollback
+            else
+                li No History
     script.
         function logout(){
             $.ajax({
@@ -32,3 +36,16 @@ block content
             })
         }
         $('.btn-logout').click(logout)
+        
+        $('.btn-publish').click(function(){
+            $.ajax({
+                url: '/api/publish',
+                type: 'GET',
+                success: function(msg){
+                    console.log(msg)
+                },
+                error: function(xhr){
+                    console.log(xhr)
+                }
+            })
+        })

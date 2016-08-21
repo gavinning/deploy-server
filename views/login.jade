@@ -4,7 +4,7 @@ block scriptInHeader
     script(src="/js/md5.js")
 
 block content
-    .form
+    .form(guid= guid)
         input(type="text", name="username", placeholder="username", value="gavinning")
         input(type="password", name="password", placeholder="password", value="sqllincoapp")
         button.btn-submit 登录
@@ -14,10 +14,15 @@ block content
             var data = {};
             data.username = $('input[name="username"]').val();
             data.password = $('input[name="password"]').val();
+            data.guid = $('.form').attr('guid');
             return data;
         }
         function getEncryption(user){
-            user.password = md5( md5(user.password) + user.username );
+            user.password = md5(user.password);
+            user.password = md5( user.password + user.username );
+            console.log(user.password)
+            user.password = md5( user.password + user.guid );
+            console.log(user.password)
             return user;
         }
         function login(){
